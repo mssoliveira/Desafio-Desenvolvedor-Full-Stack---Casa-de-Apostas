@@ -10,7 +10,7 @@ import {
 	SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { useAuthStore } from '@/store/auth';
-import { IconSettings2 } from '@tabler/icons-react';
+import { IconHome, IconSettings2 } from '@tabler/icons-react';
 import * as React from 'react';
 import { NavMain } from '../nav-main';
 import { NavUser } from '../nav-user';
@@ -19,20 +19,12 @@ const data = [
 	{
 		title: 'Dashboard',
 		url: '/',
-		icon: IconSettings2,
+		icon: IconHome,
 		isActive: true,
 		items: [
 			{
-				title: 'History',
-				url: '#',
-			},
-			{
-				title: 'Starred',
-				url: '#',
-			},
-			{
-				title: 'Settings',
-				url: '#',
+				title: 'Inicio',
+				url: '/',
 			},
 		],
 	},
@@ -42,16 +34,12 @@ const data = [
 		icon: IconSettings2,
 		items: [
 			{
-				title: 'Genesis',
-				url: '#',
+				title: 'Todos',
+				url: '/clientes',
 			},
 			{
-				title: 'Explorer',
-				url: '#',
-			},
-			{
-				title: 'Quantum',
-				url: '#',
+				title: 'Novo',
+				url: '/clientes/novo',
 			},
 		],
 	},
@@ -61,27 +49,25 @@ const data = [
 		icon: IconSettings2,
 		items: [
 			{
-				title: 'Introduction',
-				url: '#',
+				title: 'Todos',
+				url: '/contatos',
 			},
 			{
-				title: 'Get Started',
-				url: '#',
-			},
-			{
-				title: 'Tutorials',
-				url: '#',
-			},
-			{
-				title: 'Changelog',
-				url: '#',
+				title: 'Novo',
+				url: '/contatos/novo',
 			},
 		],
 	},
 	{
 		title: 'Relatório',
-		url: '/relatorio',
+		url: '#',
 		icon: IconSettings2,
+		items: [
+			{
+				title: 'Novo',
+				url: '/relatorio',
+			},
+		],
 	},
 ];
 

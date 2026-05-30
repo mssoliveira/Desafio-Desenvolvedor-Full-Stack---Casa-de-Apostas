@@ -16,7 +16,6 @@ const nextAuthOptions: NextAuthOptions = {
 					email: credentials?.email,
 					password: credentials?.password,
 				};
-				console.log('Log - body:', body);
 
 				try {
 					const response = await api.post('v1/auth/login', body);
@@ -41,7 +40,6 @@ const nextAuthOptions: NextAuthOptions = {
 						}
 					}
 				} catch (err) {
-					console.log('Log - err:', err);
 					return null;
 				}
 			},
