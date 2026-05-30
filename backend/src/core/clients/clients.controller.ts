@@ -22,7 +22,7 @@ import { ClientsService } from './clients.service';
 import { CreateClientDto } from './dto/create-client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
 
-@ApiTags('clientes')
+@ApiTags('Clientes')
 @ApiBearerAuth()
 @UseGuards(AuthGuard)
 @Controller({ version: '1', path: 'clientes' })

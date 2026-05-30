@@ -10,7 +10,7 @@ export class ClientRepository {
   constructor(private readonly database: DatabaseService) {}
 
   async findAll() {
-    return this.database.client.findMany({
+    return await this.database.client.findMany({
       include: {
         contacts: true,
       },
@@ -18,7 +18,7 @@ export class ClientRepository {
   }
 
   async findById(id: string): Promise<Client | null> {
-    return this.database.client.findUnique({
+    return await this.database.client.findUnique({
       where: { id },
       include: {
         contacts: true,
@@ -49,7 +49,7 @@ export class ClientRepository {
   }
 
   async create(data: CreateClientDto): Promise<Client> {
-    return this.database.client.create({
+    return await this.database.client.create({
       data: {
         ...data,
         email: data.email.toLocaleLowerCase(),
@@ -61,7 +61,7 @@ export class ClientRepository {
   }
 
   async update(id: string, data: UpdateClientDto): Promise<Client> {
-    return this.database.client.update({
+    return await this.database.client.update({
       where: { id },
       data: {
         ...(data.name && { name: data.name }),
@@ -75,7 +75,7 @@ export class ClientRepository {
   }
 
   async delete(id: string): Promise<Client> {
-    return this.database.client.delete({
+    return await this.database.client.delete({
       where: { id },
     });
   }

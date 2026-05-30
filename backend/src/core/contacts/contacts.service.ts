@@ -1,164 +1,139 @@
-import { Injectable } from '@nestjs/common';
-import { DatabaseService } from 'src/database/database.service';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { ContactRepository } from 'src/database/repository/contact.repository';
+import { CreateContactDto } from './dto/create-contact.dto';
+import { UpdateContactDto } from './dto/update-contact.dto';
 
 @Injectable()
 export class ContactsService {
-  constructor(
-    private readonly contactRepository: ContactRepository,
-    private readonly database: DatabaseService,
-  ) {}
+  constructor(private readonly contactRepository: ContactRepository) {}
 
-  //   async findAll() {
-  //     try {
-  //       const data = await this.contactRepository.findAll();
+  async findAll() {
+    try {
+      const data = await this.contactRepository.findAll();
 
-  //       return data;
-  //     } catch (error) {
-  //       return error;
-  //     }
-  //   }
+      return data;
+    } catch (error) {
+      if (error instanceof BadRequestException) {
+        throw error;
+      }
 
-  //   async findOne(id: string) {
-  //     const contact = await this.contactRepository.findById(id);
+      throw new InternalServerErrorException();
+    }
+  }
 
-  //     if (!contact) {
-  //       throw new NotFoundException(`Contact ${id} not found`);
-  //     }
+  async findOne(id: string) {
+    try {
+      const contact = await this.contactRepository.findById(id);
 
-  //     return contact;
-  //   }
+      if (!contact) {
+        throw new BadRequestException('Contato não encontrado.');
+      }
 
-  //   async create(body: CreateContactDto) {
-  //     const client = await this.contactRepository.findById(body.clientId);
-  //     if (!client) {
-  //       throw new BadRequestException('Client not found.');
-  //     }
+      return contact;
+    } catch (error) {
+      if (error instanceof BadRequestException) {
+        throw error;
+      }
 
-  //     const existingEmails = await this.contactRepository.existingEmails(
-  //       body.emails,
-  //     );
-  //     const existingPhones = await this.contactRepository.existingPhones(
-  //       body.phones,
-  //     );
+      throw new InternalServerErrorException();
+    }
+  }
 
-  //     const existingEmailList = existingEmails.map((item) => item.email);
-  //     const existingPhoneList = existingPhones.map((item) => item.phone);
+  async create(body: CreateContactDto) {
+    try {
+      const findEmail = await this.contactRepository.findByEmail(body.email);
+      if (findEmail) {
+        throw new BadRequestException('E-mail já consta no cadastro.');
+      }
+      const findPhone = await this.contactRepository.findByPhone(body.phone);
+      if (findPhone) {
+        throw new BadRequestException('Telefone já consta no cadastro.');
+      }
 
-  //     // emails válidos
-  //     const validEmails = body.emails.filter(
-  //       (email) => !existingEmailList.includes(email),
-  //     );
+      const contact = await this.contactRepository.create(body);
 
-  //     // phones válidos
-  //     const validPhones = body.phones.filter(
-  //       (phone) => !existingPhoneList.includes(phone),
-  //     );
+      return {
+        message: 'Contato criado com sucesso.',
+        contact,
+      };
+    } catch (error) {
+      if (error instanceof BadRequestException) {
+        throw error;
+      }
 
-  //     if (!validEmails.length && !validPhones.length) {
-  //       throw new BadRequestException(
-  //         'All emails and phones are already registered.',
-  //       );
-  //     }
+      throw new InternalServerErrorException();
+    }
+  }
 
-  //     const contact = await this.contactRepository.create({
-  //       ...body,
-  //       emails: validEmails,
-  //       phones: validPhones,
-  //     });
+  async update(id: string, body: UpdateContactDto) {
+    try {
+      const contact = await this.contactRepository.findById(id);
+      if (!contact) {
+        throw new BadRequestException('Contato não encontrado.');
+      }
 
-  //     return {
-  //       message: 'Contact created successfully.',
-  //       contact,
+      if (
+        body.email &&
+        body.email?.toLocaleLowerCase() !== contact.email?.toLocaleLowerCase()
+      ) {
+        const checkEmailExists = await this.contactRepository.findByEmail(
+          body.email,
+        );
+        if (checkEmailExists) {
+          throw new BadRequestException(
+            `E-mail está sendo usado em outro contato, tente um novo.`,
+          );
+        }
+      }
 
-  //       ignored: {
-  //         emails: existingEmailList,
-  //         phones: existingPhoneList,
-  //       },
-  //     };
-  //   }
+      if (body.phone && body.phone !== contact.phone) {
+        const checkPhoneExists = await this.contactRepository.findByPhone(
+          body.phone,
+        );
+        if (checkPhoneExists) {
+          throw new BadRequestException(
+            `Telefone está sendo usado em outro contato, tente um novo.`,
+          );
+        }
+      }
 
-  //   async update(id: string, body: UpdateContactDto) {
-  //     const existingContact = await this.contactRepository.findById(id);
+      const updated = await this.contactRepository.update(id, body);
 
-  //     if (!existingContact) {
-  //       throw new NotFoundException(`Contact ${id} not found`);
-  //     }
+      return {
+        message: 'Contato atualizado com sucesso.',
+        contact: updated,
+      };
+    } catch (error) {
+      if (error instanceof BadRequestException) {
+        throw error;
+      }
 
-  //     // valida clientId se enviado
-  //     if (body.clientId) {
-  //       const client = await this.database.client.findUnique({
-  //         where: {
-  //           id: body.clientId,
-  //         },
-  //       });
+      throw new InternalServerErrorException();
+    }
+  }
 
-  //       if (!client) {
-  //         throw new BadRequestException('Client not found.');
-  //       }
-  //     }
+  async delete(id: string) {
+    try {
+      const contact = await this.contactRepository.findById(id);
+      if (!contact) {
+        throw new BadRequestException('Contato não encontrado.');
+      }
 
-  //     // valida emails
-  //     if (body.emails?.length) {
-  //       const existingEmails = await this.database.contactEmail.findMany({
-  //         where: {
-  //           email: {
-  //             in: body.emails,
-  //           },
+      await this.contactRepository.delete(id);
 
-  //           contactId: {
-  //             not: id,
-  //           },
-  //         },
-  //       });
+      return {
+        message: 'Contato deletado com sucesso.',
+      };
+    } catch (error) {
+      if (error instanceof BadRequestException) {
+        throw error;
+      }
 
-  //       if (existingEmails.length) {
-  //         throw new BadRequestException(
-  //           'One or more emails are already registered.',
-  //         );
-  //       }
-  //     }
-
-  //     // valida phones
-  //     if (body.phones?.length) {
-  //       const existingPhones = await this.database.contactPhone.findMany({
-  //         where: {
-  //           phone: {
-  //             in: body.phones,
-  //           },
-
-  //           contactId: {
-  //             not: id,
-  //           },
-  //         },
-  //       });
-
-  //       if (existingPhones.length) {
-  //         throw new BadRequestException(
-  //           'One or more phones are already registered.',
-  //         );
-  //       }
-  //     }
-
-  //     const updatedContact = await this.contactRepository.update(id, body);
-
-  //     return {
-  //       message: 'Contact updated successfully.',
-  //       contact: updatedContact,
-  //     };
-  //   }
-
-  //   async delete(id: string) {
-  //     const contact = await this.contactRepository.findById(id);
-
-  //     if (!contact) {
-  //       throw new NotFoundException(`Contact ${id} not found`);
-  //     }
-
-  //     await this.contactRepository.delete(id);
-
-  //     return {
-  //       message: 'Contact deleted successfully.',
-  //     };
-  //   }
+      throw new InternalServerErrorException();
+    }
+  }
 }

@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { ClientRepository } from 'src/database/repository/client.repository';
 import { CreateClientDto } from './dto/create-client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
@@ -13,7 +17,11 @@ export class ClientsService {
 
       return clients;
     } catch (error) {
-      return error;
+      if (error instanceof BadRequestException) {
+        throw error;
+      }
+
+      throw new InternalServerErrorException('Erro interno ao criar cliente.');
     }
   }
 
@@ -26,7 +34,11 @@ export class ClientsService {
 
       return client;
     } catch (error) {
-      return error;
+      if (error instanceof BadRequestException) {
+        throw error;
+      }
+
+      throw new InternalServerErrorException('Erro interno ao criar cliente.');
     }
   }
 
@@ -45,11 +57,15 @@ export class ClientsService {
       const client = await this.clientRepository.create(body);
 
       return {
-        message: 'Client created successfully.',
+        message: 'Cliente criado com sucesso.',
         client,
       };
     } catch (error) {
-      return error;
+      if (error instanceof BadRequestException) {
+        throw error;
+      }
+
+      throw new InternalServerErrorException('Erro interno ao criar cliente.');
     }
   }
 
@@ -73,15 +89,29 @@ export class ClientsService {
           );
         }
       }
+      if (body.phone && body.phone !== client.phone) {
+        const checkPhoneExists = await this.clientRepository.findByPhone(
+          body.phone,
+        );
+        if (checkPhoneExists) {
+          throw new BadRequestException(
+            `Telefone está sendo usado em outro cadastro, verifique.`,
+          );
+        }
+      }
 
       const updatedClient = await this.clientRepository.update(id, body);
 
       return {
-        message: 'Client updated successfully.',
+        message: 'Cliente atualizado com sucesso.',
         client: updatedClient,
       };
     } catch (error) {
-      return error;
+      if (error instanceof BadRequestException) {
+        throw error;
+      }
+
+      throw new InternalServerErrorException('Erro interno ao criar cliente.');
     }
   }
 
@@ -96,10 +126,14 @@ export class ClientsService {
       await this.clientRepository.delete(id);
 
       return {
-        message: 'Client deleted successfully.',
+        message: 'Cliente deletado com sucesso.',
       };
     } catch (error) {
-      return error;
+      if (error instanceof BadRequestException) {
+        throw error;
+      }
+
+      throw new InternalServerErrorException('Erro interno ao criar cliente.');
     }
   }
 }
