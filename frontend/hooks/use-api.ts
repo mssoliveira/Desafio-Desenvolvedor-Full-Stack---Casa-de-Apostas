@@ -7,5 +7,10 @@ export const useApi = {
 				Authorization: `Bearer ${token}`,
 			},
 		}),
-	findById: (id: string) => api.get(`/users/${id}`),
+	findAllClients: (token: string) =>
+		api.get(`v1/clientes`, {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		}),
 };

@@ -9,10 +9,10 @@ import {
 	SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { getNameInitials } from '@/lib/helpers';
-import { useAuthStore, UserProps } from '@/store/auth';
+import { useAuthStore } from '@/store/auth';
 import { signOut } from 'next-auth/react';
 
-export function NavUser({ user }: UserProps) {
+export function NavUser({ user }: any) {
 	const clearUser = useAuthStore((state) => state.clearUser);
 	const clearToken = useAuthStore((state) => state.clearToken);
 

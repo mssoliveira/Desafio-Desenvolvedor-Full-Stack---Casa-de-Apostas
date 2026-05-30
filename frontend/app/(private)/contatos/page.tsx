@@ -5,6 +5,6 @@ export const metadata: Metadata = {
 	title: 'Todos os clientes',
 };
 
-export default function ClientsPage() {
+export default function ContactsPage() {
 	return <DashboardScreen />;
 }

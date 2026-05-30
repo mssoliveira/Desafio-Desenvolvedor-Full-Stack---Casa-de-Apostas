@@ -1,4 +1,4 @@
-import { DashboardScreen } from '@/screens/Private/Home';
+import { AllClientsScreen } from '@/screens/Private/Clients/All';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -6,5 +6,5 @@ export const metadata: Metadata = {
 };
 
 export default function ClientsPage() {
-	return <DashboardScreen />;
+	return <AllClientsScreen />;
 }

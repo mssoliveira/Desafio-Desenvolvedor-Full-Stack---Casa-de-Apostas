@@ -6,9 +6,9 @@ export interface UserProps extends Session {
 }
 
 type AuthStore = {
-	user: UserProps | null;
+	user: any | null;
 	token: string;
-	saveUser: (user: UserProps) => void;
+	saveUser: (user: any) => void;
 	clearUser: () => void;
 	saveToken: (token: string) => void;
 	clearToken: () => void;
