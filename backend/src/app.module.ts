@@ -5,6 +5,7 @@ import { AppService } from './app.service';
 import { AuthModule } from './core/auth/auth.module';
 import { ClientsModule } from './core/clients/clients.module';
 import { ContactsModule } from './core/contacts/contacts.module';
+import { DashboardModule } from './core/dashboard/dashboard.module';
 import { DatabaseModule } from './database/database.module';
 
 @Module({
@@ -12,6 +13,7 @@ import { DatabaseModule } from './database/database.module';
     ConfigModule.forRoot({ isGlobal: true }),
     DatabaseModule,
     AuthModule,
+    DashboardModule,
     ClientsModule,
     ContactsModule,
   ],

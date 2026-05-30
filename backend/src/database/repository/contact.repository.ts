@@ -8,6 +8,10 @@ import { DatabaseService } from '../database.service';
 export class ContactRepository {
   constructor(private readonly database: DatabaseService) {}
 
+  async findCountAll() {
+    return await this.database.contact.count();
+  }
+
   async findAll() {
     return await this.database.contact.findMany({
       include: {

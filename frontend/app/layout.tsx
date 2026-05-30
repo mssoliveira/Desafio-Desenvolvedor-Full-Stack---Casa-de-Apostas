@@ -1,4 +1,7 @@
+import { Toaster } from '@/components/ui/sonner';
 import { cn } from '@/lib/utils';
+import NextAuthSessionProvider from '@/providers/sessionProviders';
+import SessionHandler from '@/store/components/SessionHandler';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
@@ -22,7 +25,13 @@ export default function RootLayout({
 			lang="pt-BR"
 			className={cn('h-full', 'antialiased', 'font-sans', inter.variable)}
 		>
-			<body className="min-h-full flex flex-col">{children}</body>
+			<body className="min-h-full flex flex-col">
+				<NextAuthSessionProvider>
+					<SessionHandler />
+					{children}
+					<Toaster position="top-right" />
+				</NextAuthSessionProvider>
+			</body>
 		</html>
 	);
 }

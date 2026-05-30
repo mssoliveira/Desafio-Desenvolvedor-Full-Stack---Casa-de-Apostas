@@ -9,6 +9,10 @@ import { DatabaseService } from '../database.service';
 export class ClientRepository {
   constructor(private readonly database: DatabaseService) {}
 
+  async findCountAll() {
+    return await this.database.client.count();
+  }
+
   async findAll() {
     return await this.database.client.findMany({
       include: {
