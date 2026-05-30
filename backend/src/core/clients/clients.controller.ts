@@ -36,6 +36,13 @@ export class ClientsController {
     return this.clientsService.findAll();
   }
 
+  @Get('relatorio')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Gerar Relatorio' })
+  report() {
+    return this.clientsService.report();
+  }
+
   @Get(':id')
   @HttpCode(200)
   @ApiOperation({ summary: 'Buscar cliente por ID' })

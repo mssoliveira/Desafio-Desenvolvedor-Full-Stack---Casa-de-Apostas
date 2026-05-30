@@ -79,4 +79,24 @@ export class ClientRepository {
       where: { id },
     });
   }
+
+  async report() {
+    return await this.database.client.findMany({
+      include: {
+        contacts: {
+          omit: {
+            clientId: true,
+            createdAt: true,
+            updatedAt: true,
+          },
+        },
+      },
+      omit: {
+        updatedAt: true,
+      },
+      orderBy: {
+        name: 'asc',
+      },
+    });
+  }
 }

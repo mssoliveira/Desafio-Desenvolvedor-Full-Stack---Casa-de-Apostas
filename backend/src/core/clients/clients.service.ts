@@ -21,7 +21,7 @@ export class ClientsService {
         throw error;
       }
 
-      throw new InternalServerErrorException('Erro interno ao criar cliente.');
+      throw new InternalServerErrorException();
     }
   }
 
@@ -38,7 +38,7 @@ export class ClientsService {
         throw error;
       }
 
-      throw new InternalServerErrorException('Erro interno ao criar cliente.');
+      throw new InternalServerErrorException();
     }
   }
 
@@ -65,7 +65,7 @@ export class ClientsService {
         throw error;
       }
 
-      throw new InternalServerErrorException('Erro interno ao criar cliente.');
+      throw new InternalServerErrorException();
     }
   }
 
@@ -111,7 +111,7 @@ export class ClientsService {
         throw error;
       }
 
-      throw new InternalServerErrorException('Erro interno ao criar cliente.');
+      throw new InternalServerErrorException();
     }
   }
 
@@ -133,7 +133,24 @@ export class ClientsService {
         throw error;
       }
 
-      throw new InternalServerErrorException('Erro interno ao criar cliente.');
+      throw new InternalServerErrorException();
+    }
+  }
+
+  async report() {
+    try {
+      const clients = await this.clientRepository.report();
+
+      return {
+        totalClients: clients.length,
+        data: clients,
+      };
+    } catch (error) {
+      if (error instanceof BadRequestException) {
+        throw error;
+      }
+
+      throw new InternalServerErrorException();
     }
   }
 }

@@ -15,8 +15,8 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const config = new DocumentBuilder()
-    .setTitle('Api Docs')
-    .setDescription('Pequeno cadastro de clientes com vínculo de contatos.')
+    .setTitle('API Cadastro de Clientes')
+    .setDescription('Desafio Fullstack')
     .setVersion('1.0')
     .addBearerAuth()
     .build();
