@@ -3,13 +3,17 @@ import {
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
+import { ClientRepository } from 'src/database/repository/client.repository';
 import { ContactRepository } from 'src/database/repository/contact.repository';
 import { CreateContactDto } from './dto/create-contact.dto';
 import { UpdateContactDto } from './dto/update-contact.dto';
 
 @Injectable()
 export class ContactsService {
-  constructor(private readonly contactRepository: ContactRepository) {}
+  constructor(
+    private readonly contactRepository: ContactRepository,
+    private readonly clientRepository: ClientRepository,
+  ) {}
 
   async findAll() {
     try {
@@ -45,13 +49,29 @@ export class ContactsService {
 
   async create(body: CreateContactDto) {
     try {
-      const findEmail = await this.contactRepository.findByEmail(body.email);
-      if (findEmail) {
-        throw new BadRequestException('E-mail já consta no cadastro.');
+      const client = await this.clientRepository.findById(body.clientId);
+      if (!client) {
+        throw new BadRequestException('Cliente não encontrado.');
       }
-      const findPhone = await this.contactRepository.findByPhone(body.phone);
-      if (findPhone) {
-        throw new BadRequestException('Telefone já consta no cadastro.');
+      const contactEmailExists =
+        await this.contactRepository.findByEmailAndClientId(
+          body.email,
+          body.clientId,
+        );
+      if (contactEmailExists) {
+        throw new BadRequestException(
+          'Já existe um contato com este e-mail para este cliente.',
+        );
+      }
+      const contactPhoneExists =
+        await this.contactRepository.findByPhoneAndClientId(
+          body.phone,
+          body.clientId,
+        );
+      if (contactPhoneExists) {
+        throw new BadRequestException(
+          'Já existe um contato com este telefone para este cliente.',
+        );
       }
 
       const contact = await this.contactRepository.create(body);
@@ -78,25 +98,31 @@ export class ContactsService {
 
       if (
         body.email &&
-        body.email?.toLocaleLowerCase() !== contact.email?.toLocaleLowerCase()
+        body.email.toLowerCase() !== contact.email.toLowerCase()
       ) {
-        const checkEmailExists = await this.contactRepository.findByEmail(
+        const emailExists = await this.contactRepository.findByEmailAndClientId(
           body.email,
+          contact.clientId,
+          id,
         );
-        if (checkEmailExists) {
+
+        if (emailExists) {
           throw new BadRequestException(
-            `E-mail está sendo usado em outro contato, tente um novo.`,
+            'Já existe um contato com este e-mail para este cliente.',
           );
         }
       }
 
       if (body.phone && body.phone !== contact.phone) {
-        const checkPhoneExists = await this.contactRepository.findByPhone(
+        const phoneExists = await this.contactRepository.findByPhoneAndClientId(
           body.phone,
+          contact.clientId,
+          id,
         );
-        if (checkPhoneExists) {
+
+        if (phoneExists) {
           throw new BadRequestException(
-            `Telefone está sendo usado em outro contato, tente um novo.`,
+            'Já existe um contato com este telefone para este cliente.',
           );
         }
       }

@@ -25,24 +25,44 @@ export class ContactRepository {
     });
   }
 
-  async findByEmail(email: string): Promise<Pick<Contact, 'email'> | null> {
-    return await this.database.contact.findFirst({
+  async findByEmailAndClientId(
+    email: string,
+    clientId: string,
+    excludeId?: string,
+  ): Promise<Pick<Contact, 'email'> | null> {
+    return this.database.contact.findFirst({
       select: {
         email: true,
       },
       where: {
         email,
+        clientId,
+        ...(excludeId && {
+          NOT: {
+            id: excludeId,
+          },
+        }),
       },
     });
   }
 
-  async findByPhone(phone: string): Promise<Pick<Contact, 'phone'> | null> {
-    return await this.database.contact.findFirst({
+  async findByPhoneAndClientId(
+    phone: string,
+    clientId: string,
+    excludeId?: string,
+  ): Promise<Pick<Contact, 'phone'> | null> {
+    return this.database.contact.findFirst({
       select: {
         phone: true,
       },
       where: {
         phone,
+        clientId,
+        ...(excludeId && {
+          NOT: {
+            id: excludeId,
+          },
+        }),
       },
     });
   }
