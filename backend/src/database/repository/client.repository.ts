@@ -1,21 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { Client } from '@prisma/client';
 
+import { CreateClientDto } from 'src/core/clients/dto/create-client.dto';
+import { UpdateClientDto } from 'src/core/clients/dto/update-client.dto';
 import { DatabaseService } from '../database.service';
-
-interface CreateClientData {
-  fullName: string;
-  emails: string[];
-  phones: string[];
-  registrationDate?: Date;
-}
-
-interface UpdateClientData {
-  fullName?: string;
-  registrationDate?: Date;
-  emails?: string[];
-  phones?: string[];
-}
 
 @Injectable()
 export class ClientRepository {
@@ -23,24 +11,8 @@ export class ClientRepository {
 
   async findAll() {
     return this.database.client.findMany({
-      omit: { updatedAt: true, createdAt: true },
       include: {
-        emails: true,
-        phones: true,
-        contacts: {
-          include: {
-            emails: {
-              omit: {
-                createdAt: true,
-              },
-            },
-            phones: {
-              omit: {
-                createdAt: true,
-              },
-            },
-          },
-        },
+        contacts: true,
       },
     });
   }
@@ -49,159 +21,54 @@ export class ClientRepository {
     return this.database.client.findUnique({
       where: { id },
       include: {
-        emails: true,
-        phones: true,
-        contacts: {
-          include: {
-            emails: true,
-            phones: true,
-          },
-        },
+        contacts: true,
       },
     });
   }
 
-  async findEmailOrPhone(email: string, phone: string): Promise<Client | null> {
-    return this.database.client.findFirst({
-      where: {
-        OR: [
-          {
-            emails: {
-              some: {
-                email,
-              },
-            },
-          },
-          {
-            phones: {
-              some: {
-                phone,
-              },
-            },
-          },
-        ],
-      },
-    });
-  }
-
-  async findManyEmails(emails: string[]) {
-    return await this.database.clientEmail.findMany({
-      where: {
-        email: {
-          in: emails,
-        },
-      },
+  async findByEmail(email: string): Promise<Pick<Client, 'email'> | null> {
+    return await this.database.client.findUnique({
       select: {
         email: true,
       },
+      where: {
+        email,
+      },
     });
   }
 
-  async findManyPhone(phones: string[]) {
-    return await this.database.clientPhone.findMany({
-      where: {
-        phone: {
-          in: phones,
-        },
-      },
+  async findByPhone(phone: string): Promise<Pick<Client, 'phone'> | null> {
+    return await this.database.client.findFirst({
       select: {
         phone: true,
       },
-    });
-  }
-
-  async findManyEmailsClient(id: string, emails: string[]) {
-    return await this.database.clientEmail.findMany({
       where: {
-        email: {
-          in: emails,
-        },
-
-        clientId: {
-          not: id,
-        },
+        phone,
       },
     });
   }
 
-  async findManyPhoneClient(id: string, phones: string[]) {
-    return await this.database.clientPhone.findMany({
-      where: {
-        phone: {
-          in: phones,
-        },
-
-        clientId: {
-          not: id,
-        },
-      },
-    });
-  }
-
-  async findByFullName(fullName: string): Promise<Client | null> {
-    return this.database.client.findFirst({
-      where: {
-        fullName: {
-          equals: fullName,
-          mode: 'insensitive',
-        },
-      },
-    });
-  }
-
-  async create(data: CreateClientData): Promise<Client> {
+  async create(data: CreateClientDto): Promise<Client> {
     return this.database.client.create({
       data: {
-        fullName: data.fullName,
-        registrationDate: data.registrationDate,
-        emails: {
-          create: data.emails.map((email) => ({
-            email,
-          })),
-        },
-        phones: {
-          create: data.phones.map((phone) => ({
-            phone,
-          })),
-        },
+        ...data,
+        email: data.email.toLocaleLowerCase(),
       },
       include: {
-        emails: true,
-        phones: true,
+        contacts: true,
       },
     });
   }
 
-  async update(id: string, data: UpdateClientData): Promise<Client> {
+  async update(id: string, data: UpdateClientDto): Promise<Client> {
     return this.database.client.update({
       where: { id },
-
       data: {
-        fullName: data.fullName,
-        registrationDate: data.registrationDate,
-
-        ...(data.emails && {
-          emails: {
-            deleteMany: {},
-            create: data.emails.map((email) => ({
-              email,
-            })),
-          },
-        }),
-
-        ...(data.phones && {
-          phones: {
-            deleteMany: {},
-            create: data.phones.map((phone) => ({
-              phone,
-            })),
-          },
-        }),
+        ...(data.name && { name: data.name }),
+        ...(data.email && { email: data.email.toLowerCase() }),
+        ...(data.phone && { phone: data.phone }),
       },
-
       include: {
-        emails: true,
-        phones: true,
         contacts: true,
       },
     });

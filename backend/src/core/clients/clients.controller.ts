@@ -53,11 +53,11 @@ export class ClientsController {
     type: CreateClientDto,
     examples: {
       body: {
+        summary: 'Criar cliente',
         value: {
-          fullName: 'Usuário Teste',
-          emails: ['teste@cadastro.com', 'contato@cadastro.com'],
-          phones: ['5575998239367', '5575988887777'],
-          registrationDate: '2026-05-28T10:00:00.000Z',
+          name: 'Usuário Teste',
+          email: 'teste@cadastro.com',
+          phone: '5575998239367',
         },
       },
     },
@@ -82,11 +82,11 @@ export class ClientsController {
     type: UpdateClientDto,
     examples: {
       body: {
+        summary: 'Atualizar cliente',
         value: {
-          fullName: 'Usuário Atualizado',
-          emails: ['novoemail@cadastro.com', 'contato@cadastro.com'],
-          phones: ['5575999999999', '5575988887777'],
-          registrationDate: '2026-05-28T10:00:00.000Z',
+          name: 'Usuário Atualizado',
+          email: 'novoemail@cadastro.com',
+          phone: '5575999999999',
         },
       },
     },

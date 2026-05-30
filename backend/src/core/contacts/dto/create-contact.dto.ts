@@ -1,10 +1,23 @@
-import { IsEmail, IsNotEmpty, IsString, IsUUID, Length } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsString,
+  IsUUID,
+  Length,
+  Matches,
+} from 'class-validator';
 
 export class CreateContactDto {
+  @IsUUID()
+  clientId: string;
+
   @IsString()
   @IsNotEmpty()
   @Length(3, 120)
-  fullName: string;
+  @Matches(/^[A-Za-zÀ-ÿ]+(?:\s+[A-Za-zÀ-ÿ]+)+$/, {
+    message: 'name must contain first name and last name',
+  })
+  name: string;
 
   @IsEmail()
   email: string;
@@ -13,7 +26,4 @@ export class CreateContactDto {
   @IsNotEmpty()
   @Length(8, 20)
   phone: string;
-
-  @IsUUID()
-  clientId: string;
 }

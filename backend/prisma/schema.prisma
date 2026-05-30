@@ -18,79 +18,29 @@ model User {
 }
 
 model Client {
-    id               String   @id @default(uuid())
-    fullName         String
-    registrationDate DateTime @default(now())
-    createdAt        DateTime @default(now())
-    updatedAt        DateTime @updatedAt
+    id        String   @id @default(uuid())
+    name      String
+    email     String   @unique
+    phone     String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 
-    emails   ClientEmail[]
-    phones   ClientPhone[]
     contacts Contact[]
 
     @@map("clients")
 }
 
-model ClientEmail {
-    id        String   @id @default(uuid())
-    clientId  String
-    email     String   @unique
-    createdAt DateTime @default(now())
-
-    client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
-
-    @@index([clientId])
-    @@map("client_emails")
-}
-
-model ClientPhone {
-    id        String   @id @default(uuid())
-    clientId  String
-    phone     String   @unique
-    createdAt DateTime @default(now())
-
-    client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
-
-    @@index([clientId])
-    @@map("client_phones")
-}
-
 model Contact {
     id        String   @id @default(uuid())
-    fullName  String
     clientId  String
+    name      String
+    email     String
+    phone     String
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
     client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
 
-    emails ContactEmail[]
-    phones ContactPhone[]
-
     @@index([clientId])
     @@map("contacts")
-}
-
-model ContactEmail {
-    id        String   @id @default(uuid())
-    contactId String
-    email     String   @unique
-    createdAt DateTime @default(now())
-
-    contact Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
-
-    @@index([contactId])
-    @@map("contact_emails")
-}
-
-model ContactPhone {
-    id        String   @id @default(uuid())
-    contactId String
-    phone     String   @unique
-    createdAt DateTime @default(now())
-
-    contact Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
-
-    @@index([contactId])
-    @@map("contact_phones")
 }

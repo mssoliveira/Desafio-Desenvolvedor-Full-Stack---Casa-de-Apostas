@@ -1,10 +1,6 @@
 import {
-  ArrayMinSize,
-  IsArray,
-  IsDateString,
   IsEmail,
   IsNotEmpty,
-  IsOptional,
   IsString,
   Length,
   Matches,
@@ -15,22 +11,15 @@ export class CreateClientDto {
   @IsNotEmpty()
   @Length(3, 120)
   @Matches(/^[A-Za-zÀ-ÿ]+(?:\s+[A-Za-zÀ-ÿ]+)+$/, {
-    message: 'fullName must contain first name and last name.',
+    message: 'name must contain first name and last name',
   })
-  fullName: string;
+  name: string;
 
-  @IsArray()
-  @ArrayMinSize(1)
-  @IsEmail({}, { each: true })
-  emails: string[];
+  @IsEmail()
+  email: string;
 
-  @IsArray()
-  @ArrayMinSize(1)
-  @IsString({ each: true })
-  @Length(8, 20, { each: true })
-  phones: string[];
-
-  @IsOptional()
-  @IsDateString()
-  registrationDate?: Date;
+  @IsString()
+  @IsNotEmpty()
+  @Length(8, 20)
+  phone: string;
 }
