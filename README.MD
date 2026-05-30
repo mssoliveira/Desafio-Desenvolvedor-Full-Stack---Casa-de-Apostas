@@ -39,6 +39,37 @@ Para entender o desafio melhor leia o DESAFIO.md
 ---
 
 ## Como Rodar o Projeto Backend
+## Funcionalidades
+### Backend
+- Autenticação JWT
+- Login de usuário
+- CRUD de Clientes
+- CRUD de Contatos
+- Relacionamento Cliente → Contatos
+- Validação de dados com class-validator
+- Swagger
+- Prisma ORM
+- PostgreSQL
+- Docker
+
+## Principais Rotas
+### Auth
+POST /auth/login
+
+### Clientes
+GET /clientes<br/>
+GET /clientes/:id<br/>
+POST /clientes<br/>
+PUT /clientes/:id<br/>
+DELETE /clientes/:id<br/>
+
+### Contatos
+GET /contatos<br/>
+GET /contatos/:id<br/>
+POST /contatos<br/>
+PUT /contatos/:id<br/>
+DELETE /contatos/:id<br/>
+
 ### 1️. Subir o banco de dados (Docker)
 > ⚠️ Docker é obrigatório
 
@@ -63,9 +94,16 @@ Execute o backend
 ```bash
 pnpm start:dev
 ```
-O backend estará disponível em:
+
+## URLs da Aplicação
+API:
 ```bash
 http://localhost:3000
+```
+
+Swagger(Documentação):
+```bash
+http://localhost:3000/docs
 ```
 
 ## Como Rodar o Projeto Frontend
