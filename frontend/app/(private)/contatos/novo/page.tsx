@@ -1,4 +1,4 @@
-import { DashboardScreen } from '@/screens/Private/Home';
+import { NewContactScreen } from '@/screens/Private/Contacts/New';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -6,5 +6,5 @@ export const metadata: Metadata = {
 };
 
 export default function NewContactPage() {
-	return <DashboardScreen />;
+	return <NewContactScreen />;
 }

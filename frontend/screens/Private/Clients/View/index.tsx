@@ -13,7 +13,7 @@ import { ptBR } from 'date-fns/locale';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { toast } from 'sonner';
-import { columnsContact } from '../../Contacts/All/columns';
+import { columnsContact2 } from './columns';
 
 export function ClientScreen({ id }: { id: string }) {
 	const router = useRouter();
@@ -89,7 +89,7 @@ export function ClientScreen({ id }: { id: string }) {
 						</div>
 					</div>
 					<DataTable
-						columns={columnsContact}
+						columns={columnsContact2}
 						data={client?.contacts ?? []}
 					/>
 				</div>

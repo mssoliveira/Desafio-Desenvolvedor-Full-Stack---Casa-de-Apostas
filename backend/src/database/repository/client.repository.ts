@@ -21,6 +21,15 @@ export class ClientRepository {
     });
   }
 
+  async findList() {
+    return await this.database.client.findMany({
+      select: {
+        id: true,
+        name: true,
+      },
+    });
+  }
+
   async findById(id: string): Promise<Client | null> {
     return await this.database.client.findUnique({
       where: { id },

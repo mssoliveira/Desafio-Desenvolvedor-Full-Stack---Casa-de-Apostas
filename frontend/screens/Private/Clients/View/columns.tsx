@@ -16,7 +16,13 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ColumnDef } from '@tanstack/react-table';
 import { useRouter } from 'next/navigation';
 
-const HandleActions = ({ idAction }: { idAction: string }) => {
+const HandleActions = ({
+	idAction,
+	clientId,
+}: {
+	idAction: string;
+	clientId: string;
+}) => {
 	const router = useRouter();
 	const token = useAuthStore((state) => state.token);
 
@@ -32,11 +38,11 @@ const HandleActions = ({ idAction }: { idAction: string }) => {
 
 	const deleteClientMutation = useMutation({
 		mutationFn: async (id: string) => {
-			return await useApi.deleteClient(idAction, token!);
+			return await useApi.deleteContact(idAction, token!);
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({
-				queryKey: ['contactsAll'],
+				queryKey: ['client', clientId],
 			});
 		},
 		onError: (error) => {
@@ -72,7 +78,7 @@ const HandleActions = ({ idAction }: { idAction: string }) => {
 	);
 };
 
-export const columnsContact: ColumnDef<ContactAll>[] = [
+export const columnsContact2: ColumnDef<ContactAll>[] = [
 	{
 		accessorKey: 'name',
 		header: ({ column }) => (
@@ -93,6 +99,11 @@ export const columnsContact: ColumnDef<ContactAll>[] = [
 	},
 	{
 		id: 'actions',
-		cell: ({ row }) => <HandleActions idAction={row.original.id} />,
+		cell: ({ row }) => (
+			<HandleActions
+				idAction={row.original.id}
+				clientId={row.original.clientId}
+			/>
+		),
 	},
 ];

@@ -10,7 +10,12 @@ import {
 	SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { useAuthStore } from '@/store/auth';
-import { IconHome, IconSettings2 } from '@tabler/icons-react';
+import {
+	IconFile,
+	IconHome,
+	IconPhoneCall,
+	IconUserCheck,
+} from '@tabler/icons-react';
 import * as React from 'react';
 import { NavMain } from '../nav-main';
 import { NavUser } from '../nav-user';
@@ -31,7 +36,7 @@ const data = [
 	{
 		title: 'Clientes',
 		url: '#',
-		icon: IconSettings2,
+		icon: IconUserCheck,
 		items: [
 			{
 				title: 'Todos',
@@ -46,7 +51,7 @@ const data = [
 	{
 		title: 'Contatos',
 		url: '#',
-		icon: IconSettings2,
+		icon: IconPhoneCall,
 		items: [
 			{
 				title: 'Todos',
@@ -61,7 +66,7 @@ const data = [
 	{
 		title: 'Relatório',
 		url: '#',
-		icon: IconSettings2,
+		icon: IconFile,
 		items: [
 			{
 				title: 'Novo',

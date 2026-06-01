@@ -43,6 +43,13 @@ export class ClientsController {
     return this.clientsService.report();
   }
 
+  @Get('list')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Lista de clientes' })
+  list() {
+    return this.clientsService.list();
+  }
+
   @Get(':id')
   @HttpCode(200)
   @ApiOperation({ summary: 'Buscar cliente por ID' })

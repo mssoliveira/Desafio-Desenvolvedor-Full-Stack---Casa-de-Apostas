@@ -25,6 +25,20 @@ export class ClientsService {
     }
   }
 
+  async list() {
+    try {
+      const clients = await this.clientRepository.findList();
+
+      return clients;
+    } catch (error) {
+      if (error instanceof BadRequestException) {
+        throw error;
+      }
+
+      throw new InternalServerErrorException();
+    }
+  }
+
   async findOne(id: string) {
     try {
       const client = await this.clientRepository.findById(id);

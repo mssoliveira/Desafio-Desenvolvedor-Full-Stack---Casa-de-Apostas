@@ -11,7 +11,7 @@ import { Input } from '@/components/ui/input';
 import { PhoneInput } from '@/components/ui/phone-input';
 import { useApi } from '@/hooks/use-api';
 import { useAuthStore } from '@/store/auth';
-import { CreateClientSchema } from '@/types/create-client.schemas';
+import { ClientSchema } from '@/types/client.schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
@@ -20,15 +20,15 @@ import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import * as z from 'zod';
 
-export function NewEditScreen({ id }: { id: string }) {
+export function EditClientScreen({ id }: { id: string }) {
 	const router = useRouter();
 	const queryClient = useQueryClient();
 	const token = useAuthStore((state) => state.token);
 
 	const [loading, setLoading] = useState<boolean>(false);
 
-	const form = useForm<z.infer<typeof CreateClientSchema>>({
-		resolver: zodResolver(CreateClientSchema),
+	const form = useForm<z.infer<typeof ClientSchema>>({
+		resolver: zodResolver(ClientSchema),
 		defaultValues: {
 			name: '',
 			email: '',
@@ -43,7 +43,7 @@ export function NewEditScreen({ id }: { id: string }) {
 		retry: 5,
 	});
 
-	const updateClientMutation = useMutation({
+	const updateMutation = useMutation({
 		mutationFn: async (body: any) => {
 			return await useApi.editClient(id, body, token!);
 		},
@@ -63,7 +63,7 @@ export function NewEditScreen({ id }: { id: string }) {
 		},
 	});
 
-	const onSubmit = async (data: z.infer<typeof CreateClientSchema>) => {
+	const onSubmit = async (data: z.infer<typeof ClientSchema>) => {
 		try {
 			setLoading(true);
 			const body = {
@@ -72,7 +72,7 @@ export function NewEditScreen({ id }: { id: string }) {
 				phone: data.phone.replace(/\D/g, ''),
 			};
 
-			updateClientMutation.mutate(body);
+			updateMutation.mutate(body);
 		} catch (error) {
 			console.log('Log - error:', error);
 		} finally {
@@ -91,7 +91,7 @@ export function NewEditScreen({ id }: { id: string }) {
 	}, [client, form]);
 
 	return (
-		<Container pageTitle="Criar Cliente">
+		<Container pageTitle="Editar Cliente">
 			<div className="px-4 lg:px-6">
 				<form onSubmit={form.handleSubmit(onSubmit)}>
 					<FieldGroup>
@@ -167,7 +167,7 @@ export function NewEditScreen({ id }: { id: string }) {
 
 						<Field>
 							<Button disabled={loading} type="submit">
-								Criar novo cliente
+								Salvar alterações
 							</Button>
 						</Field>
 					</FieldGroup>

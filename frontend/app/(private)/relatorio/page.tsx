@@ -1,10 +1,10 @@
-import { DashboardScreen } from '@/screens/Private/Home';
+import { RelatorioScreen } from '@/screens/Private/Relatorio';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-	title: 'Todos os clientes',
+	title: 'Relatorio',
 };
 
 export default function RelatorioPage() {
-	return <DashboardScreen />;
+	return <RelatorioScreen />;
 }

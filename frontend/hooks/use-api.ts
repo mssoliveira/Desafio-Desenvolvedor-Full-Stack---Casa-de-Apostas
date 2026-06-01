@@ -13,6 +13,12 @@ export const useApi = {
 				Authorization: `Bearer ${token}`,
 			},
 		}),
+	findClients: (token: string) =>
+		api.get('v1/clientes/list', {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		}),
 	viewClient: (id: string, token: string) =>
 		api.get('v1/clientes/' + id, {
 			headers: {
@@ -47,7 +53,7 @@ export const useApi = {
 				Authorization: `Bearer ${token}`,
 			},
 		}),
-	createContact: (id: string, data: any, token: string) =>
+	createContact: (data: any, token: string) =>
 		api.post('v1/contatos', data, false, {
 			headers: {
 				Authorization: `Bearer ${token}`,
@@ -55,12 +61,16 @@ export const useApi = {
 		}),
 	editContact: (id: string, data: any, token: string) =>
 		api.put('v1/contatos/' + id, data, false, {
+			Authorization: `Bearer ${token}`,
+		}),
+	deleteContact: (id: string, token: string) =>
+		api.del('v1/contatos/' + id, {
 			headers: {
 				Authorization: `Bearer ${token}`,
 			},
 		}),
-	deleteContact: (id: string, token: string) =>
-		api.del('v1/contatos/' + id, {
+	viewRelatorio: (token: string) =>
+		api.get('v1/clientes/relatorio', {
 			headers: {
 				Authorization: `Bearer ${token}`,
 			},

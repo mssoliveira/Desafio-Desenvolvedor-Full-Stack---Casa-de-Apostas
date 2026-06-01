@@ -32,7 +32,7 @@ const HandleActions = ({ idAction }: { idAction: string }) => {
 
 	const deleteClientMutation = useMutation({
 		mutationFn: async (id: string) => {
-			return await useApi.deleteClient(idAction, token!);
+			return await useApi.deleteContact(idAction, token!);
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({
