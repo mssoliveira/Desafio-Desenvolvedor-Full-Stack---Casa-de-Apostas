@@ -107,4 +107,107 @@ http://localhost:3000/docs
 ```
 
 ## Como Rodar o Projeto Frontend
+### 1. Acessar a pasta do frontend
 
+```bash
+cd frontend
+```
+
+### 2. Instalar dependências
+
+```bash
+pnpm install
+```
+
+### 3. Configurar variáveis de ambiente
+
+Crie o arquivo `.env.local` na raiz do frontend e copie o conteúdo do `.env.example`.
+
+Exemplo:
+
+```env
+NEXT_PUBLIC_API="http://localhost:3000"
+NEXTAUTH_URL="http://localhost:3001"
+NEXTAUTH_SECRET="2d3c19251a366f4fd1c4a1c51c40d66eb7e747a5d389650f0777846b07482eae"
+```
+
+> Certifique-se de que o backend esteja em execução antes de iniciar o frontend.
+
+### 4. Executar o frontend
+
+```bash
+pnpm dev
+```
+
+O frontend estará disponível em:
+
+```text
+http://localhost:3001
+```
+---
+
+## Fluxo para Execução Completa
+### 1. Subir o banco de dados
+```bash
+docker-compose up -d
+```
+
+### 2. Executar o Backend
+
+```bash
+pnpm install
+pnpm prisma:deploy
+pnpm start:dev
+```
+
+Backend disponível em:
+
+```text
+http://localhost:3000
+```
+
+Swagger disponível em:
+
+```text
+http://localhost:3000/api/docs
+```
+
+### 3. Executar o Frontend
+
+```bash
+pnpm install
+pnpm dev
+```
+
+Frontend disponível em:
+
+```text
+http://localhost:3001
+```
+
+---
+
+## Usuário para Testes
+Caso tenha executado o seed da aplicação, utilize:
+**Email**
+
+```text
+user@user.dev
+```
+
+**Senha**
+
+```text
+#Senha123
+```
+
+---
+
+## Fluxo da Aplicação
+
+1. Realizar login.
+2. Cadastrar clientes.
+3. Cadastrar contatos vinculados a um cliente.
+4. Editar e excluir clientes e contatos.
+5. Consultar clientes e seus respectivos contatos.
+6. Visualizar o relatório de clientes e contatos.
