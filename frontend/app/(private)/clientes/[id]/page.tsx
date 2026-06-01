@@ -1,10 +1,11 @@
-import { DashboardScreen } from '@/screens/Private/Home';
+import { ClientScreen } from '@/screens/Private/Clients/View';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-	title: 'Todos os clientes',
+	title: 'Cliente',
 };
 
-export default function ClientIdPage() {
-	return <DashboardScreen />;
+export default async function ClientIdPage({ params }) {
+	const { id } = await params;
+	return <ClientScreen id={id} />;
 }

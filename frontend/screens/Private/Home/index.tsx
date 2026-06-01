@@ -10,20 +10,16 @@ import {
 import { Loading } from '@/components/ui/loading';
 import { useApi } from '@/hooks/use-api';
 import { useAuthStore } from '@/store/auth';
-import { useQueries } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
 export function DashboardScreen() {
 	const token = useAuthStore((state) => state.token);
 
-	const [countDashboard] = useQueries({
-		queries: [
-			{
-				queryKey: ['countdashboard', token],
-				queryFn: () => useApi.findCountDashboard(token!),
-				enabled: !!token,
-				retry: 5,
-			},
-		],
+	const { data: countDashboard, isPending } = useQuery({
+		queryKey: ['countdashboard', token],
+		queryFn: () => useApi.findCountDashboard(token!),
+		enabled: !!token,
+		retry: 5,
 	});
 
 	return (
@@ -33,11 +29,7 @@ export function DashboardScreen() {
 					<CardHeader>
 						<CardDescription>Total de Clientes</CardDescription>
 						<CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-							{countDashboard.isPending ? (
-								<Loading />
-							) : (
-								countDashboard.data?.clients
-							)}
+							{isPending ? <Loading /> : countDashboard?.clients}
 						</CardTitle>
 					</CardHeader>
 				</Card>
@@ -45,11 +37,7 @@ export function DashboardScreen() {
 					<CardHeader>
 						<CardDescription>Total de Contatos</CardDescription>
 						<CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-							{countDashboard.isPending ? (
-								<Loading />
-							) : (
-								countDashboard.data?.contacts
-							)}
+							{isPending ? <Loading /> : countDashboard.contacts}
 						</CardTitle>
 					</CardHeader>
 				</Card>

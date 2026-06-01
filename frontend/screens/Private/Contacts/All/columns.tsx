@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useApi } from '@/hooks/use-api';
 import { useAuthStore } from '@/store/auth';
-import { ClientsAll } from '@/types/type';
+import { ContactAll } from '@/types/type';
 import { IconDotsVertical } from '@tabler/icons-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ColumnDef } from '@tanstack/react-table';
@@ -21,11 +21,11 @@ const HandleActions = ({ idAction }: { idAction: string }) => {
 	const token = useAuthStore((state) => state.token);
 
 	const handleView = async () => {
-		return router.push('/clientes/' + idAction);
+		return router.push('/contatos/' + idAction);
 	};
 
 	const handleEdit = async () => {
-		return router.push('/clientes/' + idAction + '/edit');
+		return router.push('/contatos/' + idAction + '/edit');
 	};
 
 	const queryClient = useQueryClient();
@@ -36,7 +36,7 @@ const HandleActions = ({ idAction }: { idAction: string }) => {
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({
-				queryKey: ['clientsAll'],
+				queryKey: ['contactsAll'],
 			});
 		},
 		onError: (error) => {
@@ -72,11 +72,11 @@ const HandleActions = ({ idAction }: { idAction: string }) => {
 	);
 };
 
-export const columnsClients: ColumnDef<ClientsAll>[] = [
+export const columnsContact: ColumnDef<ContactAll>[] = [
 	{
 		accessorKey: 'name',
 		header: ({ column }) => (
-			<DataTableColumnHeader column={column} title="Nome" />
+			<DataTableColumnHeader column={column} title="Nome do Contato" />
 		),
 	},
 	{
@@ -89,6 +89,12 @@ export const columnsClients: ColumnDef<ClientsAll>[] = [
 		accessorKey: 'phone',
 		header: ({ column }) => (
 			<DataTableColumnHeader column={column} title="Telefone" />
+		),
+	},
+	{
+		accessorKey: 'client.name',
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="Nome do Cliente" />
 		),
 	},
 	{

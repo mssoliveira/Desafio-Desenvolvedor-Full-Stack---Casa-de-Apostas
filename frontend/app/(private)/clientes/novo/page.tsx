@@ -1,10 +1,10 @@
-import { DashboardScreen } from '@/screens/Private/Home';
+import { NewClientsScreen } from '@/screens/Private/Clients/New';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-	title: 'Todos os clientes',
+	title: 'Novo Cliente',
 };
 
 export default function NewClientPage() {
-	return <DashboardScreen />;
+	return <NewClientsScreen />;
 }

@@ -40,22 +40,28 @@ export function LoginForm({
 	});
 
 	const onSubmit = async (data: z.infer<typeof loginSchema>) => {
-		setLoading(true);
+		try {
+			setLoading(true);
 
-		const result = await signIn('credentials', {
-			email: data.email,
-			password: data.password,
-			redirect: false,
-		});
+			const result = await signIn('credentials', {
+				email: data.email,
+				password: data.password,
+				redirect: false,
+			});
 
-		if (result?.error) {
+			if (result?.error) {
+				setLoading(false);
+				return toast('Por favor, verifique seu E-mail e sua senha!');
+			}
+
 			setLoading(false);
+			toast('Login com sucesso!');
+			return router.replace('/');
+		} catch (error) {
 			return toast('Por favor, verifique seu E-mail e sua senha!');
+		} finally {
+			setLoading(false);
 		}
-
-		setLoading(false);
-		toast('Login com sucesso!');
-		return router.replace('/');
 	};
 
 	return (
@@ -117,7 +123,9 @@ export function LoginForm({
 							/>
 
 							<Field>
-								<Button type="submit">Login</Button>
+								<Button disabled={loading} type="submit">
+									Login
+								</Button>
 							</Field>
 						</FieldGroup>
 					</form>

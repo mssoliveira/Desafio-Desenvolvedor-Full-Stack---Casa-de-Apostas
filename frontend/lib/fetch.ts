@@ -33,6 +33,12 @@ function delFactory(request: ApisauceInstance) {
 	return async function fn<T = any>(url: string, headers = {}) {
 		const response = await request.delete<T>(url, {}, { ...headers });
 
+		if (!response.ok) {
+			throw new Error(
+				(response.data as any)?.message || 'Erro na requisição',
+			);
+		}
+
 		return response.data;
 	};
 }
@@ -40,6 +46,11 @@ function delFactory(request: ApisauceInstance) {
 function getFactory(request: ApisauceInstance) {
 	return async function fn<T>(url: string, headers = {}) {
 		const response = await request.get<T>(url, {}, { ...headers });
+		if (!response.ok) {
+			throw new Error(
+				(response.data as any)?.message || 'Erro na requisição',
+			);
+		}
 
 		return response.data;
 	};
@@ -64,6 +75,10 @@ function postFactory(request: ApisauceInstance) {
 
 		if (response && response.status && response.status >= 400) {
 			console.error(response);
+
+			throw new Error(
+				(response.data as any)?.message || 'Erro na requisição',
+			);
 		} else if (response && response.data) {
 			return response.data;
 		}
@@ -90,6 +105,11 @@ function patchFactory(request: ApisauceInstance) {
 		const response = await request.patch<T>(url, data || {}, {
 			...headers,
 		});
+		if (!response.ok) {
+			throw new Error(
+				(response.data as any)?.message || 'Erro na requisição',
+			);
+		}
 
 		return response.data;
 	};
@@ -115,6 +135,11 @@ function putFactory(request: ApisauceInstance) {
 		};
 
 		const response = await request.put<T>(url, data || {}, { headers });
+		if (!response.ok) {
+			throw new Error(
+				(response.data as any)?.message || 'Erro na requisição',
+			);
+		}
 
 		return response.data;
 	};
