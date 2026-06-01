@@ -37,3 +37,14 @@ export interface Contact {
 	createdAt: string;
 	updatedAt: string;
 }
+
+export type ParamsProps = {
+	params: {
+		id: string;
+	};
+};
+
+export interface clientSelect {
+	id: string;
+	name: string;
+}

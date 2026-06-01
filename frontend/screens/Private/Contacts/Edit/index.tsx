@@ -19,6 +19,7 @@ import {
 import { useApi } from '@/hooks/use-api';
 import { useAuthStore } from '@/store/auth';
 import { ContactSchema } from '@/types/contact.schemas';
+import { clientSelect } from '@/types/type';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
@@ -129,7 +130,9 @@ export function EditContactScreen({ id }: { id: string }) {
 											<SelectValue placeholder="Selecione um cliente">
 												{
 													clients?.find(
-														(client) =>
+														(
+															client: clientSelect,
+														) =>
 															client.id ===
 															field.value,
 													)?.name
@@ -138,14 +141,16 @@ export function EditContactScreen({ id }: { id: string }) {
 										</SelectTrigger>
 
 										<SelectContent>
-											{clients?.map((client) => (
-												<SelectItem
-													key={client.id}
-													value={client.id}
-												>
-													{client.name}
-												</SelectItem>
-											))}
+											{clients?.map(
+												(client: clientSelect) => (
+													<SelectItem
+														key={client.id}
+														value={client.id}
+													>
+														{client.name}
+													</SelectItem>
+												),
+											)}
 										</SelectContent>
 									</Select>
 
